@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGICFORGE-V2 // Neural Motherboard Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/index-DIerxzgr.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Dnd0tWE_.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Navigation / Telemetry Bar -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5z"/>
+          </svg>
+        </div>
+        <span class="brand-title">LOGICFORGE-V2</span>
+        <span class="brand-subtitle">SILICON CORE V2</span>
+      </div>
+
+      <div class="nav-center">
+        <!-- Preset Circuits -->
+        <div class="preset-select-wrapper">
+          <span>CIRCUIT PRESET:</span>
+          <select id="preset-selector" class="preset-select">
+            <option value="cortex_hybrid">CORTEX-1 AI + Anti-Hangup (Flux)</option>
+            <option value="stepped_tone_generator">Stepped Tone Synth (Atari Punk Console)</option>
+            <option value="discrete_rtl_not">Discrete RTL NOT (Transistor Inverter)</option>
+            <option value="checkers_hauler">Tug: Heavy Freight Hauler</option>
+            <option value="scanners_scout">Scope: Deep Vein Sonar</option>
+            <option value="tank_patrol">Dozer: Heavy Armored Bulldozer</option>
+            <option value="patrol_latch">RS-Latch Patrol (Memory)</option>
+            <option value="stepper_patrol">4-Step Sequencer Patrol (Stepper)</option>
+            <option value="timer_stepper_clock">555 Timer Clocked Stepper Patrol</option>
+            <option value="shift_ring_patrol">Shift Register Walking-Ring (Johnson Counter)</option>
+            <option value="bounce">Wall Bounce (Direct Reaction)</option>
+            <option value="empty">Blank Slate (Empty Board)</option>
+          </select>
+        </div>
+
+        <!-- Start / Stop / Step Simulation Controls -->
+        <div class="sim-controls-group">
+          <button id="sim-play-pause-btn" class="sim-btn sim-play-btn is-running" title="Start / Stop Simulation (Spacebar)">
+            <span class="sim-icon" id="sim-icon">⏸</span>
+            <span id="sim-label">RUNNING</span>
+          </button>
+          <button id="sim-step-btn" class="sim-btn sim-step-btn" title="Step 1 Frame Forward">
+            <span>⏭ STEP</span>
+          </button>
+          <select id="sim-speed-select" class="sim-speed-select" title="Simulation Speed">
+            <option value="0.25">0.25x</option>
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1.0x</option>
+            <option value="2">2.0x</option>
+          </select>
+        </div>
+
+        <!-- Mode Toggle: LIVE vs BENCH TEST -->
+        <div class="mode-toggle-group">
+          <button id="mode-live-btn" class="mode-btn mode-live active">LIVE DRIVE</button>
+          <button id="mode-bench-btn" class="mode-btn mode-bench">BENCH TEST</button>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a id="youtube-btn" href="https://www.youtube.com/@logicforgev2" target="_blank" rel="noopener noreferrer" class="btn-action btn-youtube" style="background: linear-gradient(135deg, #ff0033 0%, #c41230 100%) !important; border: 1px solid #ff6680 !important; color: #ffffff !important; font-weight: 800 !important; letter-spacing: 0.8px !important; box-shadow: 0 0 14px rgba(255, 0, 51, 0.6) !important; text-shadow: 0 1px 3px rgba(0,0,0,0.7) !important;" title="Watch Devlogs & Streams on YouTube [@logicforgev2]">
+          <span class="yt-play-icon" style="color: #ffffff !important; font-size: 13px !important; filter: drop-shadow(0 0 4px #ffffff) !important; margin-right: 4px;">▶</span>
+          <span class="yt-label" style="color: #ffffff !important; font-weight: 800 !important; font-size: 12px !important;">YOUTUBE</span>
+        </a>
+        <button id="note4jenny-btn" class="btn-action btn-note-jenny" title="Classified Transmission for Jenny [Password Required]">
+          <span>💌 NOTE4JENNY</span>
+        </button>
+        <button id="theory-manual-btn" class="btn-action btn-theory" title="Open Engineering Lab Manual & Gate Theory [H]">
+          <span>📖 MANUAL & THEORY</span>
+        </button>
+        <button id="reset-bot-btn" class="btn-action" title="Reset Robot to Spawn">
+          <span>RESET BOT</span>
+        </button>
+        <button id="clear-board-btn" class="btn-action btn-danger" title="Clear all chips and wires">
+          <span>CLEAR ALL</span>
+        </button>
+        <button id="sound-toggle-btn" class="btn-action" title="Mute/Unmute Audio">
+          <span id="sound-icon">🔊</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Fleet Command Squad Selector Bar (Dedicated Sub-Nav) -->
+    <div class="fleet-command-bar" id="fleet-command-bar">
+      <div class="fleet-squad-left">
+        <span class="fleet-title">FLEET SQUAD:</span>
+        <button class="fleet-tab active" data-bot="sparky" id="fleet-tab-sparky" title="Select Flux [1]">
+          <span class="fleet-num">1</span>
+          <span class="fleet-name">FLUX</span>
+          <span class="fleet-status">ACTIVE</span>
+        </button>
+        <button class="fleet-tab locked" data-bot="checkers" id="fleet-tab-checkers" title="Commission Tug (Heavy Hauler) [2]">
+          <span class="fleet-num">2</span>
+          <span class="fleet-name">TUG</span>
+          <span class="fleet-status">500 CR</span>
+        </button>
+        <button class="fleet-tab locked" data-bot="scanners" id="fleet-tab-scanners" title="Commission Scope (Vein Scout) [3]">
+          <span class="fleet-num">3</span>
+          <span class="fleet-name">SCOPE</span>
+          <span class="fleet-status">1000 CR</span>
+        </button>
+        <button class="fleet-tab locked" data-bot="tank" id="fleet-tab-tank" title="Commission Dozer (Bulldozer) [4]">
+          <span class="fleet-num">4</span>
+          <span class="fleet-name">DOZER</span>
+          <span class="fleet-status">1500 CR</span>
+        </button>
+      </div>
+
+      <!-- Sub-Level 3 Optical Blindness Alert in Fleet Command Bar -->
+      <div id="radar-blind-overlay" class="radar-blind-overlay hidden">
+        <span class="blind-icon">🌌</span>
+        <span class="blind-text">SUB-LEVEL 3: ABYSSAL DATA CORE // OPTICAL SENSORS BLINDED (-36m) // ENGAGE TACTICAL RADAR [R]</span>
+      </div>
+
+      <div class="fleet-squad-right">
+        <!-- Tactical CRT Radar Scanner Toggle -->
+        <button class="fleet-radar-btn" id="fleet-radar-toggle" title="Toggle Tactical CRT Radar Scanner [R]">
+          <span class="radar-sweep-icon">📡</span>
+          <span>RADAR</span>
+        </button>
+        <span class="fleet-keys-hint">HOTKEYS: [1] FLUX | [2] TUG | [3] SCOPE | [4] DOZER</span>
+        <!-- START GAME button — visible only on Mission 01 -->
+        <button class="fleet-start-game-btn hidden" id="start-game-btn" title="How to play LogicForge">
+          🟢 START GAME
+        </button>
+        <button class="fleet-sandbox-btn" id="fleet-sandbox-btn" title="Deploy all 4 companion robots (Sandbox Mode)">
+          ⚡ DEPLOY ALL
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Split Viewport -->
+    <main class="split-container" id="split-container">
+      <!-- Left: 3D Game World -->
+      <section class="world-pane" id="world-pane">
+        <div class="world-container" id="world-container"></div>
+        <!-- Top-Left: 3-Card World HUD (Sector Telemetry, Mission Nav, Objectives) -->
+        <div class="world-hud-overlay" id="world-hud-overlay">
+          <!-- Card 1: Sector & Telemetry -->
+          <div class="hud-card hud-card-telemetry" id="hud-card-telemetry">
+            <span class="hud-title">SECTOR 01 // SEWER LABS</span>
+            <span id="telemetry-bot" class="hud-bot-tag">BOT: [01] SPARKY</span>
+            <span id="telemetry-pos">POS: [-8.0, 8.0]</span>
+            <span id="telemetry-vel">VEL: 0.0 m/s</span>
+            <span id="telemetry-credits" class="hud-credits">CREDITS: 0 CR</span>
+          </div>
+
+          <!-- Card 2: Mission Navigation & Title/Concept -->
+          <div class="hud-card hud-card-mission" id="hud-card-mission">
+            <div class="m-card-header">
+              <div class="mission-nav">
+                <button id="mission-prev-btn" class="m-nav-btn" title="Previous Mission">&lt;</button>
+                <span class="m-badge" id="m-number">MISSION 01 / 08</span>
+                <button id="mission-next-btn" class="m-nav-btn" title="Next Mission">&gt;</button>
+              </div>
+              <button id="mission-codex-btn" class="m-codex-btn" title="Open Computer Science Theory & Hints">
+                <span>📖 CODEX</span>
+              </button>
+              <button id="mission-toggle-btn" class="m-nav-btn m-toggle-btn" title="Minimize / Expand Objectives">−</button>
+            </div>
+            <div class="m-card-body">
+              <div class="m-title" id="m-title">The Reflex Arc</div>
+              <div class="m-concept" id="m-concept">Concept: Direct Signal Flow &amp; Inversion</div>
+            </div>
+            <div class="mission-complete-card" id="m-complete-card">
+              <span class="complete-title">✨ MISSION ACCOMPLISHED!</span>
+              <button id="m-continue-btn" class="m-continue-btn">NEXT LEVEL &gt;&gt;</button>
+            </div>
+          </div>
+
+          <!-- Card 3: Objectives Checklist -->
+          <div class="hud-card hud-card-objectives" id="hud-card-objectives">
+            <div class="objectives-list" id="m-objectives-list"></div>
+          </div>
+        </div>
+        <div class="goal-banner" id="goal-banner">
+          ✨ ENERGY CORE ACQUIRED! TARGET LINK ESTABLISHED ✨
+        </div>
+
+        <!-- Camera Zoom & Recenter HUD Controls -->
+        <div class="camera-controls-hud">
+          <button id="cam-floor-toggle" class="cam-btn cam-floor-toggle" title="Switch View: Level 1 Labs ↔ Sub-Level 2 Quarry ↔ Sub-Level 3 Core [L]">🛗 L2</button>
+          <button id="cam-zoom-in" class="cam-btn" title="Zoom In (+ / Wheel Up)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+          <button id="cam-recenter" class="cam-btn cam-recenter tracking" title="Recenter on Flux (🎯 / Double-Click / C)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3" fill="currentColor"></circle><line x1="12" y1="1" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="23"></line><line x1="1" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="23" y2="12"></line></svg>
+          </button>
+          <button id="cam-zoom-out" class="cam-btn" title="Zoom Out (− / Wheel Down)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+        </div>
+
+        <!-- Freight Elevator Operation Console (Active on Platform) -->
+        <div id="elevator-hud-panel" class="elevator-hud-panel hidden">
+          <div class="elevator-hud-header">
+            <div class="elevator-badge">
+              <span class="elevator-status-dot"></span>
+              <span id="elevator-hud-title">🛗 FREIGHT ELEVATOR // 3-FLOOR WINCH</span>
+            </div>
+            <span id="elevator-hud-floor" class="elevator-floor-badge">CURRENT: LEVEL 1</span>
+          </div>
+          
+          <div class="elevator-hud-body">
+            <div class="elevator-power-status" id="elevator-power-status">
+              <span id="elevator-power-label">POWER STATUS: LOCKED (500 CR REQUIRED)</span>
+              <div class="elevator-power-bar-track">
+                <div id="elevator-power-bar" class="elevator-power-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 3-Floor Direct Transit Buttons -->
+            <div class="elevator-floors-select">
+              <button class="elevator-floor-btn active" data-floor="1" title="Winch to Level 1 Sewer Labs (0m)">🏢 L1 LABS</button>
+              <button class="elevator-floor-btn" data-floor="2" title="Winch to Sub-Level 2 Mining Quarry (-18m)">🛗 L2 QUARRY</button>
+              <button class="elevator-floor-btn" data-floor="3" title="Winch to Sub-Level 3 Abyssal Data Core (-36m)">🌌 L3 CORE</button>
+            </div>
+
+            <div class="elevator-actions-row">
+              <button id="elevator-action-btn" class="elevator-action-btn locked" disabled>
+                <span id="elevator-action-icon">🔒</span>
+                <span id="elevator-action-label">LOCKED: 500 CR REQUIRED</span>
+              </button>
+              <button id="elevator-bypass-btn" class="elevator-bypass-btn" title="Quick Test Mode: Grant +500 CR to instantly test Sub-Level 2 & 3 winch">
+                ⚡ QUICK UNLOCK (+500 CR)
+              </button>
+            </div>
+            <div class="elevator-hint-text">
+              <span>PRESS <strong>[F]</strong> ON KEYBOARD OR PULSE <strong>BEACON / AUX LIGHT</strong> TO TRAVEL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tactical CRT Radar Mount -->
+        <div id="radar-mount"></div>
+
+        <!-- Manual Remote Override Control Pad -->
+        <div class="remote-control-hud">
+          <div class="remote-header">MANUAL OVERRIDE</div>
+          <button id="board-elevator-quick-btn" class="board-elevator-quick-btn" title="Board Flux directly onto the Freight Elevator [B]">
+            🛗 BOARD ELEVATOR [B]
+          </button>
+          <div class="dpad-grid">
+            <button class="dpad-btn dpad-up" data-dir="thrust_n" title="Thrust North [W / ↑]">▲</button>
+            <div class="dpad-row">
+              <button class="dpad-btn dpad-left" data-dir="thrust_w" title="Thrust West [A / ←]">◀</button>
+              <button class="dpad-btn dpad-center" data-dir="grabber" title="Clamp / Release Grabber [G]">⚡</button>
+              <button class="dpad-btn dpad-right" data-dir="thrust_e" title="Thrust East [D / →]">▶</button>
+            </div>
+            <button class="dpad-btn dpad-down" data-dir="thrust_s" title="Thrust South [S / ↓]">▼</button>
+          </div>
+          <span class="dpad-keys-hint">DRIVE: WASD | GRAB: G | BOARD: B</span>
+        </div>
+      </section>
+
+      <!-- Center Splitter Resizer -->
+      <div class="splitter-handle" id="splitter-handle"></div>
+
+      <!-- Right: Interactive Motherboard -->
+      <section class="motherboard-pane" id="motherboard-pane">
+        <!-- Sub-Toolbar -->
+        <div class="motherboard-toolbar">
+          <div class="toolbar-info">
+            <span class="toolbar-tag"><span class="pulsing-dot"></span> BUS: 60 HZ SYNCHRONIZED</span>
+            <span id="active-bot-tag" class="active-bot-tag">🧠 SPARKY BRAIN</span>
+            <span id="active-wires-count">WIRES: 0</span>
+            <span id="active-chips-count">CHIPS: 0</span>
+          </div>
+          <div class="toolbar-actions">
+            <div class="toolbar-zoom-controls">
+              <button id="mb-zoom-out-btn" class="zoom-btn" title="Zoom Out (Scroll Down)">−</button>
+              <button id="mb-zoom-reset-btn" class="zoom-level-btn" title="Reset Zoom to 100% [Click]">100%</button>
+              <button id="mb-zoom-in-btn" class="zoom-btn" title="Zoom In (Scroll Up)">+</button>
+              <button id="mb-zoom-fit-btn" class="zoom-btn zoom-fit-btn" title="Center & Reset Canvas">⛶ FIT</button>
+            </div>
+            <button id="burn-chip-btn" class="btn-burn-chip" title="Package current circuit into a custom IC">
+              <span>🔥 BURN TO CHIP</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Motherboard Canvas & Header Banks -->
+        <div class="motherboard-container" id="motherboard-container"></div>
+
+        <!-- Bottom Component Tray (2-Row IC Toolbox) -->
+        <footer class="component-tray">
+          <div class="tray-labels-column">
+            <div class="tray-section-badge badge-logic" title="Combinational Logic Gates (Row 1)">
+              <span class="badge-dot dot-logic"></span>
+              <span class="badge-text">GATES</span>
+            </div>
+            <div class="tray-section-badge badge-system" title="Sequential, Bus, Memory & AI ICs (Row 2)">
+              <span class="badge-dot dot-system"></span>
+              <span class="badge-text">MODULES</span>
+            </div>
+            <div class="tray-section-badge badge-discretes" title="Discrete Analog & Audio Components (Row 3)">
+              <span class="badge-dot dot-discretes"></span>
+              <span class="badge-text">DISCRETES</span>
+            </div>
+          </div>
+          <div class="tray-chips-list">
+            <!-- Row 1: Combinational Logic Gates -->
+            <div class="tray-chips-row" id="tray-row-logic">
+              <button class="tray-chip-btn" data-type="AND" title="Quad 2-Input AND Gate (7408)">
+                <span class="tray-chip-name">AND Gate</span>
+                <span class="tray-chip-code">7408</span>
+              </button>
+              <button class="tray-chip-btn" data-type="OR" title="Quad 2-Input OR Gate (7432)">
+                <span class="tray-chip-name">OR Gate</span>
+                <span class="tray-chip-code">7432</span>
+              </button>
+              <button class="tray-chip-btn" data-type="NOT" title="Hex Inverter / NOT Gate (7404)">
+                <span class="tray-chip-name">NOT Invert</span>
+                <span class="tray-chip-code">7404</span>
+              </button>
+              <button class="tray-chip-btn" data-type="XOR" title="Quad 2-Input XOR Gate (7486)">
+                <span class="tray-chip-name">XOR Gate</span>
+                <span class="tray-chip-code">7486</span>
+              </button>
+              <button class="tray-chip-btn" data-type="NAND" title="Quad 2-Input NAND Gate (7400)">
+                <span class="tray-chip-name">NAND Gate</span>
+                <span class="tray-chip-code">7400</span>
+              </button>
+              <button class="tray-chip-btn" data-type="NOR" title="Quad 2-Input NOR Gate (7402)">
+                <span class="tray-chip-name">NOR Gate</span>
+                <span class="tray-chip-code">7402</span>
+              </button>
+            </div>
+            <!-- Row 2: Sequential, Bus, Memory & AI Modules -->
+            <div class="tray-chips-row" id="tray-row-advanced">
+              <button class="tray-chip-btn" data-type="RS_LATCH" title="Quad S-R Latch (74279)">
+                <span class="tray-chip-name">RS Latch</span>
+                <span class="tray-chip-code">74279</span>
+              </button>
+              <button class="tray-chip-btn timer-chip" data-type="TIMER_555" title="NE555 Precision Timer (Astable Oscillator / Monostable Delay)">
+                <span class="tray-chip-name">555 Timer</span>
+                <span class="tray-chip-code">NE555</span>
+              </button>
+              <button class="tray-chip-btn counter-chip" data-type="COUNTER_7SEG" title="Decade & Hex Counter with Emerald LED 7-Segment Readout">
+                <span class="tray-chip-name">7-Seg Counter</span>
+                <span class="tray-chip-code">74160-LED</span>
+              </button>
+              <button class="tray-chip-btn stepper-chip" data-type="STEPPER" title="4-Step Ring Sequencer / State Machine (4017-SEQ)">
+                <span class="tray-chip-name">Stepper SEQ</span>
+                <span class="tray-chip-code">4017-SEQ</span>
+              </button>
+              <button class="tray-chip-btn register-chip" data-type="SHIFT_REG" title="4-Bit Bidirectional Shift Register (74194-SR)">
+                <span class="tray-chip-name">Shift Reg</span>
+                <span class="tray-chip-code">74194-SR</span>
+              </button>
+              <button class="tray-chip-btn bus-chip" data-type="BUS_2CH" title="2-Channel Terminal Strip (1 IN → 2 OUT Splitter Block)">
+                <span class="tray-chip-name">2-Ch Strip</span>
+                <span class="tray-chip-code">TB-2CH</span>
+              </button>
+              <button class="tray-chip-btn bus-chip" data-type="BUS_3CH" title="3-Channel Terminal Strip (1 IN → 3 OUT Splitter Block)">
+                <span class="tray-chip-name">3-Ch Strip</span>
+                <span class="tray-chip-code">TB-3CH</span>
+              </button>
+              <button class="tray-chip-btn bus-chip" data-type="BUS_4CH" title="4-Channel Terminal Strip (1 IN → 4 OUT Splitter Block)">
+                <span class="tray-chip-name">4-Ch Strip</span>
+                <span class="tray-chip-code">TB-4CH</span>
+              </button>
+              <button class="tray-chip-btn mem-chip" data-type="WAYPOINT_MEM" title="Waypoint Memory Register & Navigator (74374-MEM)">
+                <span class="tray-chip-name">Waypoint Reg</span>
+                <span class="tray-chip-code">74374-MEM</span>
+              </button>
+              <button class="tray-chip-btn ai-chip" data-type="CORTEX_AI" title="CORTEX-1 Neural Autopilot Navigation Processor">
+                <span class="tray-chip-name">CORTEX-1 AI</span>
+                <span class="tray-chip-code">AUTOPILOT</span>
+              </button>
+            </div>
+            <!-- Row 3: Discrete Analog & Audio Components -->
+            <div class="tray-chips-row" id="tray-row-discretes">
+              <button class="tray-chip-btn power-chip" data-type="POWER" title="+5V DC Power Source Rail (PWR-5V)">
+                <span class="tray-chip-name">Power</span>
+                <span class="tray-chip-code">+5V VCC</span>
+              </button>
+              <button class="tray-chip-btn ground-chip" data-type="GROUND" title="0V Common Ground Reference (GND-0V)">
+                <span class="tray-chip-name">Ground</span>
+                <span class="tray-chip-code">0V GND</span>
+              </button>
+              <button class="tray-chip-btn resistor-chip" data-type="RESISTOR_220" title="220Ω Resistor (Red-Red-Brown-Gold)">
+                <span class="tray-chip-name">220Ω Res</span>
+                <span class="tray-chip-code">R-220</span>
+              </button>
+              <button class="tray-chip-btn resistor-chip" data-type="RESISTOR_330" title="330Ω Resistor (Orange-Orange-Brown-Gold)">
+                <span class="tray-chip-name">330Ω Res</span>
+                <span class="tray-chip-code">R-330</span>
+              </button>
+              <button class="tray-chip-btn led-chip" data-type="LED" title="5mm High-Brightness LED Indicator Lamp (LED-5MM)">
+                <span class="tray-chip-name">LED Lamp</span>
+                <span class="tray-chip-code">LED-5MM</span>
+              </button>
+              <button class="tray-chip-btn discrete-chip" data-type="NPN" title="2N3904 NPN Bipolar Junction Transistor">
+                <span class="tray-chip-name">NPN Trans</span>
+                <span class="tray-chip-code">2N3904</span>
+              </button>
+              <button class="tray-chip-btn discrete-chip" data-type="PNP" title="2N3906 PNP Bipolar Junction Transistor">
+                <span class="tray-chip-name">PNP Trans</span>
+                <span class="tray-chip-code">2N3906</span>
+              </button>
+              <button class="tray-chip-btn pot-chip" data-type="POTENTIOMETER" title="10K Adjustable Trimmer Potentiometer">
+                <span class="tray-chip-name">10K Pot</span>
+                <span class="tray-chip-code">TRIM-10K</span>
+              </button>
+              <button class="tray-chip-btn cap-chip" data-type="CAPACITOR" title="10µF Electrolytic Timing & Filter Capacitor">
+                <span class="tray-chip-name">10µF Cap</span>
+                <span class="tray-chip-code">E-CAP-10uF</span>
+              </button>
+              <button class="tray-chip-btn speaker-chip" data-type="PIEZO_BUZZER" title="8Ω Piezo Acoustic Speaker / Audio Buzzer">
+                <span class="tray-chip-name">Piezo Spk</span>
+                <span class="tray-chip-code">SPK-8OHM</span>
+              </button>
+            </div>
+          </div>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <!-- In-Place "Burn to Microchip" Innovation Lab Modal -->
+  <div id="burn-modal" class="burn-modal">
+    <div class="burn-backdrop"></div>
+    <div class="burn-dialog">
+      <header class="burn-header">
+        <div class="burn-title-group">
+          <span class="burn-badge">INNOVATION LAB // SILICON FABRICATION</span>
+          <h2>PACKAGE SUB-CIRCUIT TO MICROCHIP</h2>
+        </div>
+        <button class="burn-close-btn" id="burn-close-btn">&times;</button>
+      </header>
+
+      <div class="burn-body">
+        <div class="burn-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>CHIP NAME:</label>
+              <input type="text" id="burn-chip-name" value="CUSTOM_CORE" maxlength="20" />
+            </div>
+            <div class="form-group">
+              <label>SILKSCREEN CODE:</label>
+              <input type="text" id="burn-chip-code" value="IC-C1" maxlength="8" />
+            </div>
+          </div>
+
+          <div class="burn-preview-info">
+            <span class="preview-stat" id="burn-stat-chips">0 CHIPS ENCAPSULATED</span>
+            <span class="preview-stat" id="burn-stat-wires">0 BUS TRACES</span>
+          </div>
+
+          <div class="burn-pin-mapping">
+            <div class="pin-mapping-col">
+              <span class="col-title">INPUT PINS (DETECTED)</span>
+              <div id="burn-inputs-list" class="pins-checklist"></div>
+            </div>
+            <div class="pin-mapping-col">
+              <span class="col-title">OUTPUT PINS (DETECTED)</span>
+              <div id="burn-outputs-list" class="pins-checklist"></div>
+            </div>
+          </div>
+
+          <button id="burn-confirm-btn" class="burn-confirm-btn">
+            <span>⚡ FABRICATE & BURN TO TOOLBOX</span>
+          </button>
+        </div>
+
+        <div class="burn-ic-preview">
+          <div class="ic-3d-visual">
+            <div class="ic-socket-notch"></div>
+            <div class="ic-chip-label" id="preview-chip-label">CUSTOM_CORE</div>
+            <div class="ic-code-label" id="preview-chip-code">IC-C1</div>
+            <div class="ic-pins-left" id="preview-pins-left"></div>
+            <div class="ic-pins-right" id="preview-pins-right"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- START GAME Modal                                       -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="start-game-modal-backdrop hidden" id="start-game-modal">
+    <div class="start-game-modal">
+      <div class="sgm-header">
+        <span class="sgm-badge">🟢 LOGICFORGE // MISSION BRIEFING</span>
+        <button class="sgm-close-btn" id="sgm-close-btn">✕</button>
+      </div>
+      <h2 class="sgm-title">HOW TO START YOUR CAMPAIGN</h2>
+      <p class="sgm-intro">
+        Welcome to <strong>LogicForge</strong> — the robot command simulator where <em>you wire the brain</em>.
+        Complete all <strong class="sgm-green">8 GREEN MISSIONS</strong> to master the core logic systems
+        and unlock your full fleet.
+      </p>
+      <ol class="sgm-steps">
+        <li><span class="sgm-step-num">01</span><span>Complete <strong class="sgm-green">MISSION 01 – 08</strong> in order. Each one teaches a new concept.</span></li>
+        <li><span class="sgm-step-num">02</span><span>Drag <strong>chips</strong> from the IC Toolbox onto the motherboard and <strong>wire</strong> them to sensors &amp; actuators.</span></li>
+        <li><span class="sgm-step-num">03</span><span>Switch to <strong>LIVE DRIVE</strong> mode and pilot <strong>FLUX</strong> to the glowing target beacon.</span></li>
+        <li><span class="sgm-step-num">04</span><span>Hit <strong>MISSION ACCOMPLISHED</strong> → press <strong>NEXT LEVEL</strong> to advance.</span></li>
+        <li><span class="sgm-step-num">05</span><span>Earn credits to commission <strong>TUG, SCOPE &amp; DOZER</strong> — your full robot fleet.</span></li>
+      </ol>
+      <div class="sgm-tip">
+        💡 <strong>TIP:</strong> Click <strong>📖 CODEX</strong> on any mission for theory hints and circuit diagrams.
+      </div>
+      <button class="sgm-launch-btn" id="sgm-launch-btn">⚡ LET'S GO — START MISSION 01</button>
+    </div>
+  </div>
+
+</body>
+</html>
