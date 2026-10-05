@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./index-DIerxzgr.js"></script>
-  <link rel="stylesheet" crossorigin href="./index-Dnd0tWE_.css">
+  <script type="module" crossorigin src="./index-DGaiKJKo.js"></script>
+  <link rel="stylesheet" crossorigin href="./index-DvTgXZ-H.css">
 </head>
 <body>
   <div id="app">
@@ -26,7 +26,7 @@
 
       <div class="nav-center">
         <!-- Preset Circuits -->
-        <div class="preset-select-wrapper">
+        <div class="preset-select-wrapper" id="preset-select-wrapper">
           <span>CIRCUIT PRESET:</span>
           <select id="preset-selector" class="preset-select">
             <option value="cortex_hybrid">CORTEX-1 AI + Anti-Hangup (Flux)</option>
@@ -73,9 +73,7 @@
           <span class="yt-play-icon" style="color: #ffffff !important; font-size: 13px !important; filter: drop-shadow(0 0 4px #ffffff) !important; margin-right: 4px;">▶</span>
           <span class="yt-label" style="color: #ffffff !important; font-weight: 800 !important; font-size: 12px !important;">YOUTUBE</span>
         </a>
-        <button id="note4jenny-btn" class="btn-action btn-note-jenny" title="Classified Transmission for Jenny [Password Required]">
-          <span>💌 NOTE4JENNY</span>
-        </button>
+
         <button id="theory-manual-btn" class="btn-action btn-theory" title="Open Engineering Lab Manual & Gate Theory [H]">
           <span>📖 MANUAL & THEORY</span>
         </button>
@@ -95,7 +93,7 @@
     <div class="fleet-command-bar" id="fleet-command-bar">
       <div class="fleet-squad-left">
         <span class="fleet-title">FLEET SQUAD:</span>
-        <button class="fleet-tab active" data-bot="sparky" id="fleet-tab-sparky" title="Select Flux [1]">
+        <button class="fleet-tab active" data-bot="flux" id="fleet-tab-flux" title="Select Flux [1]">
           <span class="fleet-num">1</span>
           <span class="fleet-name">FLUX</span>
           <span class="fleet-status">ACTIVE</span>
@@ -130,9 +128,15 @@
           <span>RADAR</span>
         </button>
         <span class="fleet-keys-hint">HOTKEYS: [1] FLUX | [2] TUG | [3] SCOPE | [4] DOZER</span>
-        <!-- START GAME button — visible only on Mission 01 -->
-        <button class="fleet-start-game-btn hidden" id="start-game-btn" title="How to play LogicForge">
+        <span class="game-mode-badge demo" id="game-mode-badge">📺 DEMO MODE</span>
+        <button class="fleet-continue-game-btn hidden" id="continue-game-btn" title="Resume Your Saved Campaign">
+          ▶ CONTINUE GAME
+        </button>
+        <button class="fleet-start-game-btn" id="start-game-btn" title="Begin the LogicForge Campaign">
           🟢 START GAME
+        </button>
+        <button class="fleet-demo-btn hidden" id="demo-mode-btn" title="Return to Demo Showcase">
+          📺 DEMO MODE
         </button>
         <button class="fleet-sandbox-btn" id="fleet-sandbox-btn" title="Deploy all 4 companion robots (Sandbox Mode)">
           ⚡ DEPLOY ALL
@@ -150,10 +154,17 @@
           <!-- Card 1: Sector & Telemetry -->
           <div class="hud-card hud-card-telemetry" id="hud-card-telemetry">
             <span class="hud-title">SECTOR 01 // SEWER LABS</span>
-            <span id="telemetry-bot" class="hud-bot-tag">BOT: [01] SPARKY</span>
+            <span id="telemetry-bot" class="hud-bot-tag">BOT: [01] FLUX</span>
             <span id="telemetry-pos">POS: [-8.0, 8.0]</span>
             <span id="telemetry-vel">VEL: 0.0 m/s</span>
             <span id="telemetry-credits" class="hud-credits">CREDITS: 0 CR</span>
+            <div class="hud-energy-bar-wrap" id="hud-energy-wrap" title="Chassis Power Level">
+              <span class="hud-energy-icon" id="hud-energy-icon">⚡</span>
+              <div class="hud-energy-bar-track">
+                <div class="hud-energy-bar-fill normal" id="hud-energy-fill" style="width: 100%;"></div>
+              </div>
+              <span class="hud-energy-pct" id="hud-energy-pct">100%</span>
+            </div>
           </div>
 
           <!-- Card 2: Mission Navigation & Title/Concept -->
@@ -220,11 +231,12 @@
               </div>
             </div>
 
-            <!-- 3-Floor Direct Transit Buttons -->
+            <!-- 4-Floor Direct Transit Buttons -->
             <div class="elevator-floors-select">
-              <button class="elevator-floor-btn active" data-floor="1" title="Winch to Level 1 Sewer Labs (0m)">🏢 L1 LABS</button>
-              <button class="elevator-floor-btn" data-floor="2" title="Winch to Sub-Level 2 Mining Quarry (-18m)">🛗 L2 QUARRY</button>
-              <button class="elevator-floor-btn" data-floor="3" title="Winch to Sub-Level 3 Abyssal Data Core (-36m)">🌌 L3 CORE</button>
+              <button class="elevator-floor-btn active" data-floor="1" title="Winch to Level 1 Sewer Labs (0m)">🏢 L1</button>
+              <button class="elevator-floor-btn" data-floor="2" title="Winch to Sub-Level 2 Mining Quarry (-18m)">🛗 L2</button>
+              <button class="elevator-floor-btn" data-floor="3" title="Winch to Sub-Level 3 Abyssal Data Core (-36m)">🌌 L3</button>
+              <button class="elevator-floor-btn" data-floor="4" title="Winch to Sub-Level 4 Deep Trench Void (-54m) // Zero Visibility">📡 L4 VOID</button>
             </div>
 
             <div class="elevator-actions-row">
@@ -244,24 +256,6 @@
 
         <!-- Tactical CRT Radar Mount -->
         <div id="radar-mount"></div>
-
-        <!-- Manual Remote Override Control Pad -->
-        <div class="remote-control-hud">
-          <div class="remote-header">MANUAL OVERRIDE</div>
-          <button id="board-elevator-quick-btn" class="board-elevator-quick-btn" title="Board Flux directly onto the Freight Elevator [B]">
-            🛗 BOARD ELEVATOR [B]
-          </button>
-          <div class="dpad-grid">
-            <button class="dpad-btn dpad-up" data-dir="thrust_n" title="Thrust North [W / ↑]">▲</button>
-            <div class="dpad-row">
-              <button class="dpad-btn dpad-left" data-dir="thrust_w" title="Thrust West [A / ←]">◀</button>
-              <button class="dpad-btn dpad-center" data-dir="grabber" title="Clamp / Release Grabber [G]">⚡</button>
-              <button class="dpad-btn dpad-right" data-dir="thrust_e" title="Thrust East [D / →]">▶</button>
-            </div>
-            <button class="dpad-btn dpad-down" data-dir="thrust_s" title="Thrust South [S / ↓]">▼</button>
-          </div>
-          <span class="dpad-keys-hint">DRIVE: WASD | GRAB: G | BOARD: B</span>
-        </div>
       </section>
 
       <!-- Center Splitter Resizer -->
@@ -273,7 +267,7 @@
         <div class="motherboard-toolbar">
           <div class="toolbar-info">
             <span class="toolbar-tag"><span class="pulsing-dot"></span> BUS: 60 HZ SYNCHRONIZED</span>
-            <span id="active-bot-tag" class="active-bot-tag">🧠 SPARKY BRAIN</span>
+            <span id="active-bot-tag" class="active-bot-tag">🧠 FLUX BRAIN</span>
             <span id="active-wires-count">WIRES: 0</span>
             <span id="active-chips-count">CHIPS: 0</span>
           </div>
@@ -375,10 +369,11 @@
                 <span class="tray-chip-name">Waypoint Reg</span>
                 <span class="tray-chip-code">74374-MEM</span>
               </button>
-              <button class="tray-chip-btn ai-chip" data-type="CORTEX_AI" title="CORTEX-1 Neural Autopilot Navigation Processor">
+              <button class="tray-chip-btn ai-chip demo-only-chip" data-type="CORTEX_AI" title="CORTEX-1 Neural Autopilot Navigation Processor (Demo Mode)">
                 <span class="tray-chip-name">CORTEX-1 AI</span>
                 <span class="tray-chip-code">AUTOPILOT</span>
               </button>
+
             </div>
             <!-- Row 3: Discrete Analog & Audio Components -->
             <div class="tray-chips-row" id="tray-row-discretes">
@@ -459,6 +454,16 @@
             <span class="preview-stat" id="burn-stat-wires">0 BUS TRACES</span>
           </div>
 
+          <!-- Waypoint Register Status & ROM Baking Card -->
+          <div id="burn-waypoint-info" class="burn-waypoint-card hidden">
+            <div class="burn-wp-header">
+              <span class="burn-wp-icon">📍</span>
+              <span class="burn-wp-title">WAYPOINT MEMORY REGISTER</span>
+            </div>
+            <div class="burn-wp-coords" id="burn-wp-coords">[EMPTY]</div>
+            <button type="button" id="burn-wp-latch-btn" class="burn-wp-latch-btn">📍 LATCH CURRENT ROBOT POS</button>
+          </div>
+
           <div class="burn-pin-mapping">
             <div class="pin-mapping-col">
               <span class="col-title">INPUT PINS (DETECTED)</span>
@@ -514,7 +519,119 @@
       <div class="sgm-tip">
         💡 <strong>TIP:</strong> Click <strong>📖 CODEX</strong> on any mission for theory hints and circuit diagrams.
       </div>
-      <button class="sgm-launch-btn" id="sgm-launch-btn">⚡ LET'S GO — START MISSION 01</button>
+      <div class="sgm-actions-wrap" style="display: flex; gap: 12px; margin-top: 18px;">
+        <button class="sgm-continue-btn hidden" id="sgm-continue-btn" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: 1px solid #34d399; font-weight: 700; padding: 13px; border-radius: 6px; cursor: pointer; font-size: 13px; letter-spacing: 0.5px; box-shadow: 0 0 16px rgba(16, 185, 129, 0.4); text-shadow: 0 1px 2px rgba(0,0,0,0.5);">▶ RESUME SAVED CAMPAIGN</button>
+        <button class="sgm-launch-btn" id="sgm-launch-btn" style="flex: 1;">⚡ START NEW GAME</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- NEW GAME OVERWRITE CONFIRMATION Modal                  -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="start-game-modal-backdrop hidden" id="new-game-confirm-modal" style="z-index: 10002;">
+    <div class="start-game-modal" style="border-color: #ef4444; box-shadow: 0 0 35px rgba(239, 68, 68, 0.4); max-width: 520px;">
+      <div class="sgm-header">
+        <span class="sgm-badge" style="background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444;">⚠️ OVERWRITE SAVED CAMPAIGN?</span>
+        <button class="sgm-close-btn" id="ngc-close-btn">✕</button>
+      </div>
+      <h2 class="sgm-title" style="color: #ef4444;">START FRESH CAMPAIGN?</h2>
+      <p class="sgm-intro">
+        An existing campaign with your custom circuits, credits, and unlocked robots was found.
+        Starting a new game will <strong>wipe all robot motherboards to blank</strong>, reset credits to 0, and restart at Mission 01.
+      </p>
+      <div class="sgm-tip" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #fca5a5;">
+        🚨 <strong>WARNING:</strong> This action will overwrite your save. To keep your current circuits and progress, choose <strong>CANCEL &amp; KEEP PROGRESS</strong>.
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 18px;">
+        <button id="ngc-cancel-btn" style="flex: 1; background: #1e293b; color: #94a3b8; border: 1px solid #475569; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600;">CANCEL &amp; KEEP PROGRESS</button>
+        <button id="ngc-confirm-btn" style="flex: 1; background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: #fff; border: 1px solid #f87171; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 700; box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);">RESET &amp; START FRESH</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- CHIP PROCUREMENT REQUISITION Modal                     -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="chip-purchase-modal-backdrop hidden" id="chip-purchase-modal">
+    <div class="chip-purchase-modal">
+      <div class="cpm-header">
+        <span class="cpm-badge">📦 SILICON CORE REQUISITION</span>
+        <button class="cpm-close-btn" id="cpm-close-btn">✕</button>
+      </div>
+      <div class="cpm-body">
+        <div class="cpm-chip-preview">
+          <div class="cpm-chip-icon" id="cpm-chip-icon">🔲</div>
+          <div class="cpm-chip-meta">
+            <h3 id="cpm-chip-name">555 PRECISION TIMER</h3>
+            <span id="cpm-chip-code" class="cpm-code">NE555</span>
+          </div>
+        </div>
+        <p id="cpm-chip-desc" class="cpm-desc">Generates calibrated clock pulses and timing oscillations.</p>
+        
+        <div class="cpm-pricing-grid">
+          <div class="cpm-stat-box">
+            <span class="cpm-label">PROCUREMENT COST:</span>
+            <span class="cpm-val cost" id="cpm-chip-cost">150 CR</span>
+          </div>
+          <div class="cpm-stat-box">
+            <span class="cpm-label">YOUR REFINED CREDITS:</span>
+            <span class="cpm-val balance" id="cpm-user-credits">0 CR</span>
+          </div>
+        </div>
+        
+        <div class="cpm-alert-msg hidden" id="cpm-alert-msg">
+          ⚠️ INSUFFICIENT FUNDS // DELIVER RAW ORE TO LEVEL 1 REFINERY TO EARN CREDITS
+        </div>
+
+        <button class="cpm-buy-btn" id="cpm-buy-btn">
+          ⚡ AUTHORIZE PROCUREMENT (-150 CR)
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- EMERGENCY STRANDED / POWER FAILURE Modal               -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="stranded-modal" class="stranded-modal hidden">
+    <div class="stranded-backdrop"></div>
+    <div class="stranded-dialog">
+      <header class="stranded-header">
+        <span class="stranded-badge">⚠️ CRITICAL POWER FAILURE // 0.0%</span>
+        <h2>CHASSIS STRANDED IN FIELD</h2>
+      </header>
+      <div class="stranded-body">
+        <div class="stranded-icon-wrap">
+          <span class="stranded-siren">🚨</span>
+          <span class="stranded-battery-empty">🪫</span>
+        </div>
+        <p class="stranded-desc">
+          Unit <strong id="stranded-bot-name">FLUX</strong> has suffered complete battery depletion at coordinates <span id="stranded-coords">[-12.4, 8.2]</span>.
+          All actuators and thrusters are offline.
+        </p>
+        <div class="stranded-stats">
+          <div class="stranded-stat-row">
+            <span>RECOVERY SERVICE:</span>
+            <span class="stat-highlight">HEAVY INDUSTRIAL FLATBED TOW</span>
+          </div>
+          <div class="stranded-stat-row">
+            <span>DISPATCH FEE:</span>
+            <span class="stat-fee">-2,500 CR</span>
+          </div>
+          <div class="stranded-stat-row">
+            <span>CURRENT BALANCE:</span>
+            <span id="stranded-cur-credits" class="stat-credits">0 CR</span>
+          </div>
+        </div>
+        <div class="stranded-actions">
+          <button id="stranded-tow-btn" class="stranded-tow-btn">
+            <span>🚁 DISPATCH TOW &amp; FULL RECHARGE (-2,500 CR)</span>
+          </button>
+          <button id="stranded-restart-btn" class="stranded-restart-btn">
+            <span>🔄 RESTART MISSION CHECKPOINT</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
